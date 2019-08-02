@@ -7,9 +7,15 @@ const config = require('./config');
 const apm = require('./connections/apm');
 const App = require('./app');
 const logger = require('./logger');
+const dbClient = require('./connections/db');
+const emailClient = require('./connections/email');
 
+const dependencies = {
+  dbClient,
+  emailClient
+};
 
-const app = new App();
+const app = new App(dependencies);
 
 function handleError(err, ctx) {
   if (apm.active) {
@@ -36,7 +42,10 @@ app.on('error', handleError);
 // Start server
 if (!module.parent) {
   const server = app.listen(config.port, config.host, () => {
-    logger.info({ event: 'execute' }, `API server listening on ${config.host}:${config.port}, in ${config.env}`);
+    logger.info(
+      { event: 'execute' },
+      `API server listening on ${config.host}:${config.port}, in ${config.env}`
+    );
   });
   server.on('error', handleError);
 
