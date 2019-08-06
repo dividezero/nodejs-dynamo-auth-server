@@ -39,7 +39,7 @@
   "main": "app",
   "scripts": {
     "start": "node app",
-    "dev": "NODE_ENV=development nodemon --quiet | pino-pretty -c -l -t",
+    "dev": "NODE_ENV=development nodemon --inspect=9229 --quiet | pino-pretty -c -l -t",
     "test": "NODE_ENV=test jest --passWithNoTests",
     "test:unit": "npm test -- test/unit",
     "test:integration": "npm test -- test/integration",
@@ -64,7 +64,7 @@
     "got": "^9.6.0",
     "joi": "^14.3.1",
     "koa": "^2.7.0",
-    "koa-bodyparser": "^4.2.0",
+    "koa-bodyparser": "^4.2.1",
     "koa-depsi": "^1.0.1",
     "koa-router": "^7.4.0",
     "pino": "^5.12.6",

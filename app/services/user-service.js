@@ -4,15 +4,16 @@ const config = require('../config');
 const create = (userRepository, mailSender) => async (email, password) => {
   // get password hash
   const { salt, hash } = await crypto.computeHash(password);
+  console.log(`password ${password}`);
 
   // generate auth token
   let token = await crypto.randomBytes(config.CRYPTO_BYTE_SIZE);
   token = token.toString('hex');
 
   // store user
-  const result = await userRepository.store({ email, hash, salt, token });
+  const result = await userRepository.store({ email, passwordHash: hash, salt, token });
 
-  console.log('stored')
+  console.log('stored');
 
   if (config.sendEmails) {
     try {

@@ -1,8 +1,9 @@
 const config = require('../config');
 
 // todo joi validations
-const store = dbClient => ({ email, password, salt, token }) => {
+const store = dbClient => ({ email, passwordHash, salt, token }) => {
   console.log('storing');
+  console.log(email, passwordHash, salt, token);
   return dbClient
     .putItem({
       TableName: config.DDB_TABLE,
@@ -11,7 +12,7 @@ const store = dbClient => ({ email, password, salt, token }) => {
           S: email
         },
         passwordHash: {
-          S: password
+          S: passwordHash
         },
         passwordSalt: {
           S: salt

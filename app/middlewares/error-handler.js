@@ -2,8 +2,7 @@
 
 const debug = require('debug')('koa:error-handler');
 const Response = require('../utils/response');
-const { UNKNOWN_ENDPOINT, UNKNOWN_ERROR } = require('../constants/error');
-
+const { INVALID_REQUEST, UNKNOWN_ENDPOINT, UNKNOWN_ERROR } = require('../constants/error');
 
 /**
  * Return middleware that handle exceptions in Koa.
@@ -24,9 +23,13 @@ module.exports = () => {
         return Response.notFound(ctx, UNKNOWN_ENDPOINT);
       }
     } catch (err) {
-      debug('An error occured: %s', err.name);
+      console.error('An error occured: %s', err.name);
 
-      return Response.internalServerError(ctx, UNKNOWN_ERROR);
+      if (err.name === 'ValidationError') {
+        return Response.fail(ctx, { ...INVALID_REQUEST, message: err.message });
+      } else {
+        return Response.internalServerError(ctx, UNKNOWN_ERROR);
+      }
     }
   };
 };
