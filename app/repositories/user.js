@@ -1,9 +1,41 @@
 const config = require('../config');
 
+// todo can definitely abstract out the logic elsewhere and only leave the schema definitions here. maybe if there are more tables
+const SCHEMA = {
+  email: 'S',
+  passwordHash: 'S',
+  salt: 'S',
+  token: 'S',
+  verified: 'BOOL',
+  verifyToken: 'S'
+};
+
+const getUpdateObject = (schema, updateModel) => {
+  const keys = Object.keys(updateModel);
+  return keys.reduce((result, key) => {
+    if (updateModel[key]) {
+      const dataType = schema[key];
+      return {
+        ...result,
+        [key]: {
+          Action: 'PUT',
+          Value: {
+            [dataType]: updateModel[key]
+          }
+        }
+      };
+    }
+    return {
+      ...result,
+      [key]: {
+        Action: 'DELETE'
+      }
+    };
+  }, {});
+};
+
 // todo joi validations
 const store = dbClient => ({ email, passwordHash, salt, token }) => {
-  console.log('storing');
-  console.log(email, passwordHash, salt, token);
   return dbClient
     .putItem({
       TableName: config.DDB_TABLE,
@@ -29,6 +61,21 @@ const store = dbClient => ({ email, passwordHash, salt, token }) => {
     .promise();
 };
 
+const update = dbClient => (email, user) => {
+  const updateObject = getUpdateObject(SCHEMA, user);
+  return dbClient
+    .updateItem({
+      TableName: config.DDB_TABLE,
+      Key: {
+        email: {
+          S: email
+        }
+      },
+      AttributeUpdates: updateObject
+    })
+    .promise();
+};
+
 const fetch = dbClient => async email => {
   const data = await dbClient
     .getItem({
@@ -46,10 +93,11 @@ const fetch = dbClient => async email => {
       Item: {
         passwordHash: { S: hash },
         passwordSalt: { S: salt },
-        verified: { BOOL: verified }
+        verified: { BOOL: verified },
+        verifyToken: { S: verifyToken }
       }
     } = data;
-    return { email, hash, salt, verified };
+    return { email, hash, salt, verified, verifyToken };
   } else {
     throw new Error(`User email: ${email} not found`);
   }
@@ -57,5 +105,6 @@ const fetch = dbClient => async email => {
 
 module.exports = dbClient => ({
   store: store(dbClient),
+  update: update(dbClient),
   fetch: fetch(dbClient)
 });

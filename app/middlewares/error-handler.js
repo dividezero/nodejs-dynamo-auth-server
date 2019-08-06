@@ -24,8 +24,9 @@ module.exports = () => {
       }
     } catch (err) {
       console.error('An error occured: %s', err.name);
+      console.error(err.stack);
 
-      if (err.name === 'ValidationError') {
+      if (err.status < 500) {
         return Response.fail(ctx, { ...INVALID_REQUEST, message: err.message });
       } else {
         return Response.internalServerError(ctx, UNKNOWN_ERROR);

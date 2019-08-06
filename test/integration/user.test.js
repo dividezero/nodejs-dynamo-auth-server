@@ -1,10 +1,7 @@
 'use strict';
 
 const supertest = require('supertest');
-const os = require('os');
-const pkg = require('../../package.json');
 const app = require('../../app');
-
 
 const server = app.listen();
 
@@ -12,28 +9,47 @@ afterAll(async () => {
   await app.terminate();
 });
 
+const randomNum = () => Math.floor(Math.random() * 101);
+
 describe('Users', () => {
+  const prefix = '/user';
+  const email = `test${randomNum()}@test.com`;
+
   const request = supertest(server);
+  let token = '';
 
   describe('POST /', () => {
     it('<200> should create a user', async () => {
       const res = await request
-        .post('/user')
-        .expect('Content-Type', /json/)
+        .post(prefix)
+        .send({
+          email,
+          password: 'password'
+        })
+        .set({ 'Content-Type': 'application/json' })
         .expect(200);
 
-      const info = res.body;
-      const expected = ['name', 'version', 'description', 'environments'];
-      expect(Object.keys(info)).toEqual(expect.arrayContaining(expected));
-      expect(info.name).toBe(pkg.name);
-      expect(info.version).toBe(pkg.version);
-      expect(info.description).toBe(pkg.description);
-      expect(info.environments).toBeInstanceOf(Object);
+      const { body } = res;
+      expect(body.status).toBe('success');
+      token = body.data.token;
+      // todo check db
+    });
+  });
 
-      const environments = info.environments;
-      expect(environments.hostname).toBe(os.hostname());
-      expect(environments.nodeVersion).toBe(process.versions['node']);
-      expect(environments.platform).toBe(`${process.platform}/${process.arch}`);
+  describe('POST /verify', () => {
+    it('<200> should verify user', async () => {
+      const res = await request
+        .post(`${prefix}/verify`)
+        .send({
+          email,
+          token
+        })
+        .set({ 'Content-Type': 'application/json' })
+        .expect(200);
+
+      const { body } = res;
+      expect(body.status).toBe('success');
+      // todo check db
     });
   });
 });
