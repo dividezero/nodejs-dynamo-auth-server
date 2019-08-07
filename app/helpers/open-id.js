@@ -1,22 +1,22 @@
-// todo finish this
-/* eslint-disable */
-const config = require('../config');
+const {
+  aws: { cognito: cognitoConfig }
+} = require('../config');
 
 const getToken = openIdClient => email => {
   const param = {
-    IdentityPoolId: config.IDENTITY_POOL_ID,
+    IdentityPoolId: cognitoConfig.identityPoolId,
     Logins: {}
   };
-  param.Logins[config.DEVELOPER_PROVIDER_NAME] = email;
+  param.Logins[cognitoConfig.devProviderName] = email;
   return new Promise((resolve, reject) => {
-    // openIdClient.getOpenIdTokenForDeveloperIdentity(param, (err, data) => {
-    //   if (err) {
-    //     reject(err);
-    //   } else {
-    //     resolve({ identityId: data.IdentityId, token: data.Token });
-    //   }
-    // });
-    resolve({ identityId: 'identityId', token: 'token' });
+    openIdClient.getOpenIdTokenForDeveloperIdentity(param, (err, data) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ identityId: data.IdentityId, token: data.Token });
+      }
+    });
+    // resolve({ identityId: 'identityId', token: 'token' });
   });
 };
 

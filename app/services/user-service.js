@@ -1,5 +1,5 @@
 const crypto = require('../utils/crypto');
-const config = require('../config');
+const { email: emailConfig } = require('../config');
 
 const create = (userRepository, mailSender) => async (email, password) => {
   // get password hash
@@ -11,7 +11,7 @@ const create = (userRepository, mailSender) => async (email, password) => {
   // store user
   await userRepository.store({ email, hash, salt, token });
 
-  if (config.sendEmails) {
+  if (emailConfig.enabled) {
     try {
       // send notification email
       mailSender.sendVerificationEmail(email, token);
@@ -108,7 +108,7 @@ const lostPassword = (userRepository, mailSender) => async email => {
       lostToken
     });
 
-    if (config.sendEmails) {
+    if (emailConfig.enabled) {
       try {
         // send notification email
         mailSender.sendLostPasswordEmail(email, lostToken);

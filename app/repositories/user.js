@@ -1,4 +1,4 @@
-const config = require('../config');
+const { db: dbConfig } = require('../config');
 
 // todo can definitely abstract out the logic elsewhere and only leave the schema definitions here. maybe if there are more tables
 const SCHEMA = {
@@ -39,7 +39,7 @@ const getUpdateObject = (schema, updateModel) => {
 const store = dbClient => ({ email, hash, salt, token }) => {
   return dbClient
     .putItem({
-      TableName: config.DDB_TABLE,
+      TableName: dbConfig.userTable,
       Item: {
         email: {
           S: email
@@ -66,7 +66,7 @@ const update = dbClient => (email, user) => {
   const updateObject = getUpdateObject(SCHEMA, user);
   return dbClient
     .updateItem({
-      TableName: config.DDB_TABLE,
+      TableName: dbConfig.userTable,
       Key: {
         email: {
           S: email
@@ -80,7 +80,7 @@ const update = dbClient => (email, user) => {
 const fetch = dbClient => async email => {
   const data = await dbClient
     .getItem({
-      TableName: config.DDB_TABLE,
+      TableName: dbConfig.userTable,
       Key: {
         email: {
           S: email
@@ -101,7 +101,8 @@ const fetch = dbClient => async email => {
     const lostToken = data.Item.lostToken && data.Item.lostToken.S;
     return { email, hash, salt, verified, verifyToken, lostToken };
   } else {
-    throw new Error(`User email: ${email} not found`);
+    // user not found
+    return {};
   }
 };
 

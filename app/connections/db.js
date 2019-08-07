@@ -1,12 +1,14 @@
 const AWS = require('aws-sdk');
-const config = require('../config');
+const {
+  aws: { dynamoDb: ddbConfig }
+} = require('../config');
 
 AWS.config.update({
-  region: config.REGION,
-  accessKeyId: 'xxxx',
-  secretAccessKey: 'xxxx'
+  region: ddbConfig.region,
+  accessKeyId: ddbConfig.accessKey,
+  secretAccessKey: ddbConfig.secretKey
 });
 
-const dynamodb = new AWS.DynamoDB({ endpoint: new AWS.Endpoint('http://localhost:8000') });
+const dynamodb = new AWS.DynamoDB({ endpoint: new AWS.Endpoint(ddbConfig.endpoint) });
 
 module.exports = dynamodb;

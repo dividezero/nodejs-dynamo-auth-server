@@ -1,7 +1,6 @@
 'use strict';
 
 const dotenv = require('dotenv');
-const db = require('./db');
 
 // Load environment variables from .env file
 dotenv.config();
@@ -13,8 +12,32 @@ const configs = {
     name: process.env.APP_NAME || 'auth-server',
     host: process.env.APP_HOST || '0.0.0.0',
     port: 7070,
-    sendEmails: false,
-    ...db
+    email: {
+      enabled: false,
+      from: process.env.EMAIL_SOURCE,
+      verificationPageUrl: process.env.VERIFICATION_PAGE_URL,
+      resetPageUrl: process.env.RESET_PAGE_URL
+    },
+    db: { userTable: process.env.DDB_TABLE || 'users' },
+    crypto: {
+      byteSize: Number(process.env.CRYPTO_BYTE_SIZE) || 128,
+      digest: process.env.CRYPTO_DIGEST || 'sha512'
+    },
+    aws: {
+      dynamoDb: {
+        region: process.env.DYNAMO_REGION || 'eu-west-1',
+        endpoint: process.env.DYNAMO_ENDPOINT || 'http://localhost:8000',
+        accessKey: process.env.DYNAMO_ACCESS_KEY || 'xxxx',
+        secretKey: process.env.DYNAMO_SECRET_KEY || 'xxxx'
+      },
+      cognito: {
+        region: process.env.COGNITO_REGION || 'eu-west-1',
+        accessKey: process.env.COGNITO_ACCESS_KEY || 'xxxx',
+        secretKey: process.env.COGNITO_SECRET_KEY || 'xxxx',
+        devProviderName: process.env.DEVELOPER_PROVIDER_NAME || 'login.mycompany.myapp',
+        identityPoolId: process.env.IDENTITY_POOL_ID || 'authPool',
+      }
+    }
   },
   production: {
     port: process.env.APP_PORT || 7071

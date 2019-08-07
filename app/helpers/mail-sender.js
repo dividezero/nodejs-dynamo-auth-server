@@ -1,14 +1,14 @@
-const config = require('../config');
+const { name, email: emailConfig } = require('../config');
 
 // todo html templating
 const sendVerificationEmail = emailClient => (email, token) => {
-  const subject = 'Verification Email for ' + config.EXTERNAL_NAME;
+  const subject = 'Verification Email for ' + name;
   const verificationLink =
-    config.VERIFICATION_PAGE + '?email=' + encodeURIComponent(email) + '&verify=' + token;
+    emailConfig.verificationPageUrl + '?email=' + encodeURIComponent(email) + '&verify=' + token;
   return new Promise((resolve, reject) => {
     emailClient.sendEmail(
       {
-        Source: config.EMAIL_SOURCE,
+        Source: emailConfig.from,
         Destination: {
           ToAddresses: [email]
         },
@@ -51,13 +51,13 @@ const sendVerificationEmail = emailClient => (email, token) => {
 };
 
 const sendLostPasswordEmail = emailClient => (email, token) => {
-  const subject = 'Password Lost for ' + config.EXTERNAL_NAME;
-  const lostLink = config.RESET_PAGE + '?email=' + encodeURIComponent(email) + '&lost=' + token;
+  const subject = 'Password Lost for ' + name;
+  const lostLink = emailConfig.resetPageUrl + '?email=' + encodeURIComponent(email) + '&lost=' + token;
 
   return new Promise((resolve, reject) =>
     emailClient.sendEmail(
       {
-        Source: config.EMAIL_SOURCE,
+        Source: emailConfig.from,
         Destination: {
           ToAddresses: [email]
         },

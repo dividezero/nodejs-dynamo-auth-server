@@ -2,6 +2,7 @@
 
 const debug = require('debug')('koa:error-handler');
 const Response = require('../utils/response');
+const logger = require('../logger');
 const {
   AUTH_REQUIRED,
   INVALID_REQUEST,
@@ -28,8 +29,8 @@ module.exports = () => {
         return Response.notFound(ctx, UNKNOWN_ENDPOINT);
       }
     } catch (err) {
-      console.error('An error occured: %s', err.name);
-      console.error(err.stack);
+      logger.error('An error occured: %s', err.name);
+      logger.error(err.stack);
 
       if (err.status < 500) {
         switch (err.status) {

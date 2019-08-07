@@ -1,10 +1,10 @@
 const crypto = require('crypto-promise');
-const config = require('../config');
+const { crypto: cryptoConfig } = require('../config');
 
 const computeHash = async (password, salt) => {
   // Bytesize
-  const len = config.CRYPTO_BYTE_SIZE;
-  const digest = config.CRYPTO_DIGEST;
+  const len = cryptoConfig.byteSize;
+  const digest = cryptoConfig.digest;
   const iterations = 4096;
 
   if (salt) {
@@ -16,7 +16,7 @@ const computeHash = async (password, salt) => {
   }
 };
 
-const randomToken = async (len = config.CRYPTO_BYTE_SIZE) => {
+const randomToken = async (len = cryptoConfig.byteSize) => {
   const result = await crypto.randomBytes(len);
   return result.toString('base64');
 };
