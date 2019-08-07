@@ -42,7 +42,7 @@ const store = dbClient => ({ email, hash, salt, token }) => {
       TableName: dbConfig.userTable,
       Item: {
         email: {
-          S: email
+          S: email.toLowerCase()
         },
         hash: {
           S: hash
@@ -69,7 +69,7 @@ const update = dbClient => (email, user) => {
       TableName: dbConfig.userTable,
       Key: {
         email: {
-          S: email
+          S: email.toLowerCase()
         }
       },
       AttributeUpdates: updateObject
@@ -83,7 +83,7 @@ const fetch = dbClient => async email => {
       TableName: dbConfig.userTable,
       Key: {
         email: {
-          S: email
+          S: email.toLowerCase()
         }
       }
     })

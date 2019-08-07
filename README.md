@@ -36,10 +36,10 @@ To get a local copy up and running follow these simple example steps.
 
 This is an example of how to list things you need to use the software and how to install them.
 
-- npm
+- yarn or npm
 
 ```sh
-npm install npm@latest -g
+brew install yarn
 ```
 
 ### Development
@@ -86,6 +86,13 @@ All test for this boilerplate uses following tools.
 
 - [Jest](https://github.com/facebook/jest)
 - [supertest](https://github.com/visionmedia/supertest) - Easy HTTP assertions for integration test
+
+### DynamoDB Local
+
+I recommend using instructure's dynamo local with an admin page to manage the local dynamoDB instance
+```zsh
+docker run -p 8000:8000 -it --rm instructure/dynamo-local-admin
+```
 
 <!-- USAGE EXAMPLES -->
 
