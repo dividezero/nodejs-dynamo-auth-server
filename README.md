@@ -8,7 +8,7 @@
   <h3 align="center">Oauth2 Authentication Server</h3>
 
   <p align="center">
-    An awesome Oauth2 authentication server built on NodeJs, DynemoDb and Cognito
+    Oauth2 authentication server built on NodeJs, DynamoDb and Cognito
   </p>
 </p>
 
