@@ -3,11 +3,12 @@ const config = require('../config');
 // todo can definitely abstract out the logic elsewhere and only leave the schema definitions here. maybe if there are more tables
 const SCHEMA = {
   email: 'S',
-  passwordHash: 'S',
+  hash: 'S',
   salt: 'S',
   token: 'S',
   verified: 'BOOL',
-  verifyToken: 'S'
+  verifyToken: 'S',
+  lostToken: 'S'
 };
 
 const getUpdateObject = (schema, updateModel) => {
@@ -35,7 +36,7 @@ const getUpdateObject = (schema, updateModel) => {
 };
 
 // todo joi validations
-const store = dbClient => ({ email, passwordHash, salt, token }) => {
+const store = dbClient => ({ email, hash, salt, token }) => {
   return dbClient
     .putItem({
       TableName: config.DDB_TABLE,
@@ -43,10 +44,10 @@ const store = dbClient => ({ email, passwordHash, salt, token }) => {
         email: {
           S: email
         },
-        passwordHash: {
-          S: passwordHash
+        hash: {
+          S: hash
         },
-        passwordSalt: {
+        salt: {
           S: salt
         },
         verified: {
@@ -91,13 +92,14 @@ const fetch = dbClient => async email => {
   if ('Item' in data) {
     const {
       Item: {
-        passwordHash: { S: hash },
-        passwordSalt: { S: salt },
-        verified: { BOOL: verified },
-        verifyToken: { S: verifyToken }
+        hash: { S: hash },
+        salt: { S: salt },
+        verified: { BOOL: verified }
       }
     } = data;
-    return { email, hash, salt, verified, verifyToken };
+    const verifyToken = data.Item.verifyToken && data.Item.verifyToken.S;
+    const lostToken = data.Item.lostToken && data.Item.lostToken.S;
+    return { email, hash, salt, verified, verifyToken, lostToken };
   } else {
     throw new Error(`User email: ${email} not found`);
   }

@@ -11,13 +11,18 @@ const computeHash = async (password, salt) => {
     const result = await crypto.pbkdf2(password, salt, iterations, len, digest);
     return { salt, hash: result.toString('base64') };
   } else {
-    let newSalt = await crypto.randomBytes(len);
-    newSalt = newSalt.toString('base64');
+    let newSalt = await randomToken();
     return computeHash(password, newSalt);
   }
 };
 
+const randomToken = async (len = config.CRYPTO_BYTE_SIZE) => {
+  const result = await crypto.randomBytes(len);
+  return result.toString('base64');
+};
+
 module.exports = {
   ...crypto,
-  computeHash
+  computeHash,
+  randomToken
 };

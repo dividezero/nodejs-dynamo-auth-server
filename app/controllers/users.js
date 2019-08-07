@@ -54,8 +54,33 @@ const verifyUser = async ctx => {
     status: 'success'
   };
 };
+const loginUser = async ctx => {
+  try {
+    await Joi.validate(
+      ctx.request.body,
+      Joi.object().keys({
+        email: Joi.string()
+          .email()
+          .required(),
+        password: Joi.string().required()
+      })
+    );
+  } catch (err) {
+    ctx.throw(423, err.message);
+  }
+
+  const { email, password } = ctx.request.body;
+  const result = await ctx.deps.userService.login(email, password);
+  const { statusCode, message } = result;
+  if (statusCode && statusCode !== 200) {
+    ctx.throw(statusCode, message);
+  }
+
+  ctx.body = result;
+};
 
 module.exports = {
   createUser,
-  verifyUser
+  verifyUser,
+  loginUser
 };
