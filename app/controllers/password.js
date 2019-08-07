@@ -1,5 +1,37 @@
 const Joi = require('joi');
 
+const changePassword = async ctx => {
+  try {
+    await Joi.validate(
+      ctx.request.body,
+      Joi.object().keys({
+        email: Joi.string()
+          .email()
+          .required(),
+        password: Joi.string().required(),
+        newPassword: Joi.string().required()
+      })
+    );
+  } catch (err) {
+    ctx.throw(400, err.message);
+  }
+
+  const { email, password, newPassword } = ctx.request.body;
+  const { statusCode, message, changed } = await ctx.deps.userService.changePassword(
+    email,
+    password,
+    newPassword
+  );
+
+  if (statusCode !== 200) {
+    ctx.throw(statusCode, message);
+  }
+  ctx.body = {
+    status: 'success',
+    changed
+  };
+};
+
 const lostPassword = async ctx => {
   try {
     await Joi.validate(
@@ -11,7 +43,7 @@ const lostPassword = async ctx => {
       })
     );
   } catch (err) {
-    ctx.throw(423, err.message);
+    ctx.throw(400, err.message);
   }
 
   const { email } = ctx.request.body;
@@ -39,7 +71,7 @@ const resetPassword = async ctx => {
       })
     );
   } catch (err) {
-    ctx.throw(423, err.message);
+    ctx.throw(400, err.message);
   }
 
   const { email, lostToken, newPassword } = ctx.request.body;
@@ -59,6 +91,7 @@ const resetPassword = async ctx => {
 };
 
 module.exports = {
+  changePassword,
   lostPassword,
   resetPassword
 };

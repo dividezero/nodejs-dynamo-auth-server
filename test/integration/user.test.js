@@ -9,19 +9,21 @@ afterAll(async () => {
   await app.terminate();
 });
 
-const randomNum = () => Math.floor(Math.random() * 101);
+const randomNum = () => Math.floor(Math.random() * 1000001);
 
+// todo fix test dependency so tests can be run individually. eg: use beforeAll
 describe('Users', () => {
   const prefix = '/user';
   const email = `test${randomNum()}@test.com`;
   const password = 'password';
-  const newPassword = 'newPassword';
+  const password2 = 'password2';
+  const password3 = 'password3';
 
   const request = supertest(server);
   let token = '';
   let lostToken = '';
 
-  describe('POST /', () => {
+  describe('Create User', () => {
     it('<200> should create a user', async () => {
       const res = await request
         .post(prefix)
@@ -36,9 +38,37 @@ describe('Users', () => {
       expect(body.status).toBe('success');
       token = body.data.token;
     });
+
+    it('<400> should fail if user exists', async () => {
+      const res = await request
+        .post(prefix)
+        .send({
+          email,
+          password
+        })
+        .set({ 'Content-Type': 'application/json' })
+        .expect(400);
+
+      const { body } = res;
+      expect(body.status).toBe('fail');
+    });
   });
 
   describe('POST /verify', () => {
+    it('<401> should fail to verify user', async () => {
+      const res = await request
+        .post(`${prefix}/verify`)
+        .send({
+          email,
+          token: 'not-your-token'
+        })
+        .set({ 'Content-Type': 'application/json' })
+        .expect(401);
+
+      const { body } = res;
+      expect(body.status).toBe('fail');
+    });
+
     it('<200> should verify user', async () => {
       const res = await request
         .post(`${prefix}/verify`)
@@ -55,6 +85,20 @@ describe('Users', () => {
   });
 
   describe('POST /login', () => {
+    it('<401> should fail login for user', async () => {
+      const res = await request
+        .post(`${prefix}/login`)
+        .send({
+          email,
+          password: `wrong ${password}`
+        })
+        .set({ 'Content-Type': 'application/json' })
+        .expect(401);
+
+      const { body } = res;
+      expect(body.status).toBe('fail');
+    });
+
     it('<200> should login user and return an identityID and token pair', async () => {
       const res = await request
         .post(`${prefix}/login`)
@@ -66,8 +110,8 @@ describe('Users', () => {
         .expect(200);
 
       const { body } = res;
+      expect(body.status).toBe('success');
       expect(body.login).toBe(true);
-      // todo more specific
       expect(body.data.identityId).toBeDefined();
       expect(body.data.token).toBeDefined();
     });
@@ -85,19 +129,18 @@ describe('Users', () => {
 
       const { body } = res;
       expect(body.status).toBe('success');
-      // todo more specific
       lostToken = body.data.lostToken;
     });
   });
 
-  describe('POST /password/reset`', () => {
-    it('<200> should reset password', async () => {
+  describe('POST /password/change`', () => {
+    it('<200> should change password', async () => {
       const res = await request
-        .post(`${prefix}/password/reset`)
+        .post(`${prefix}/password/change`)
         .send({
           email,
-          lostToken,
-          newPassword
+          password,
+          newPassword: password2
         })
         .set({ 'Content-Type': 'application/json' })
         .expect(200);
@@ -112,7 +155,7 @@ describe('Users', () => {
         .post(`${prefix}/login`)
         .send({
           email,
-          password: newPassword
+          password: password2
         })
         .set({ 'Content-Type': 'application/json' })
         .expect(200);
@@ -120,6 +163,40 @@ describe('Users', () => {
       const { body } = res;
       expect(body.login).toBe(true);
       // todo more specific
+      expect(body.data.identityId).toBeDefined();
+      expect(body.data.token).toBeDefined();
+    });
+  });
+
+  describe('POST /password/reset`', () => {
+    it('<200> should reset password', async () => {
+      const res = await request
+        .post(`${prefix}/password/reset`)
+        .send({
+          email,
+          lostToken,
+          newPassword: password3
+        })
+        .set({ 'Content-Type': 'application/json' })
+        .expect(200);
+
+      const { body } = res;
+      expect(body.status).toBe('success');
+      expect(body.changed).toBe(true);
+    });
+
+    it('<200> should login user and return an identityID and token pair', async () => {
+      const res = await request
+        .post(`${prefix}/login`)
+        .send({
+          email,
+          password: password3
+        })
+        .set({ 'Content-Type': 'application/json' })
+        .expect(200);
+
+      const { body } = res;
+      expect(body.login).toBe(true);
       expect(body.data.identityId).toBeDefined();
       expect(body.data.token).toBeDefined();
     });

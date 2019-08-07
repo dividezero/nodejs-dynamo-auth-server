@@ -12,7 +12,7 @@ const createUser = async ctx => {
       })
     );
   } catch (err) {
-    ctx.throw(423, err.message);
+    ctx.throw(400, err.message);
   }
 
   try {
@@ -25,7 +25,7 @@ const createUser = async ctx => {
     };
   } catch (err) {
     if (err.name === 'ConditionalCheckFailedException') {
-      ctx.throw(423, 'User already exists');
+      ctx.throw(400, 'User already exists');
     }
     throw err;
   }
@@ -44,14 +44,19 @@ const verifyUser = async ctx => {
       })
     );
   } catch (err) {
-    ctx.throw(423, err.message);
+    ctx.throw(400, err.message);
   }
 
   const { email, token } = ctx.request.body;
-  await ctx.deps.userService.verify(email, token);
+  const { statusCode, message, verified } = await ctx.deps.userService.verify(email, token);
+
+  if (statusCode && statusCode !== 200) {
+    ctx.throw(statusCode, message);
+  }
 
   ctx.body = {
-    status: 'success'
+    status: 'success',
+    verified
   };
 };
 const loginUser = async ctx => {
@@ -66,7 +71,7 @@ const loginUser = async ctx => {
       })
     );
   } catch (err) {
-    ctx.throw(423, err.message);
+    ctx.throw(400, err.message);
   }
 
   const { email, password } = ctx.request.body;
@@ -76,7 +81,7 @@ const loginUser = async ctx => {
     ctx.throw(statusCode, message);
   }
 
-  ctx.body = result;
+  ctx.body = { status: 'success', ...result };
 };
 
 module.exports = {

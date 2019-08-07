@@ -37,11 +37,10 @@ const verify = userRepository => async (email, token) => {
       verified: true,
       verifyToken: null
     });
+    return { verified: true };
   } else {
     // wrong token
-    const err = new Error('The given token is incorrect');
-    err.name = 'UserVerificationError';
-    throw err;
+    return { statusCode: 401, message: 'The given token is incorrect' };
   }
 };
 
@@ -68,6 +67,29 @@ const login = (userRepository, openId) => async (email, password) => {
           token: token
         }
       };
+    } else {
+      return { login: false, statusCode: 401, message: 'Wrong password' };
+    }
+  }
+};
+
+const changePassword = userRepository => async (email, password, newPassword) => {
+  const user = await userRepository.fetch(email);
+  const { hash, salt } = user;
+  if (!hash) {
+    // user doesnt exist
+    return { statusCode: 404, message: "User doesn't exist" };
+  } else {
+    const { hash: loginHash } = await crypto.computeHash(password, salt);
+    if (loginHash === hash) {
+      // successfully reset
+      const { hash: newHash, salt: newSalt } = await crypto.computeHash(newPassword);
+      await userRepository.update(email, {
+        hash: newHash,
+        salt: newSalt
+      });
+
+      return { statusCode: 200, changed: true };
     } else {
       return { login: false, statusCode: 401, message: 'Wrong password' };
     }
@@ -124,6 +146,7 @@ module.exports = ({ userRepository, mailSender, openId }) => ({
   create: create(userRepository, mailSender),
   verify: verify(userRepository),
   login: login(userRepository, openId),
+  changePassword: changePassword(userRepository),
   lostPassword: lostPassword(userRepository, mailSender),
   resetPassword: resetPassword(userRepository)
 });

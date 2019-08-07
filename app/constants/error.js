@@ -22,7 +22,7 @@ module.exports.UNKNOWN_RESOURCE = {
 };
 
 module.exports.INVALID_REQUEST = {
-  statusCode: 423,
+  statusCode: 400,
   code: 'INVALID_REQUEST',
   message: 'The request has invalid parameters.'
 };

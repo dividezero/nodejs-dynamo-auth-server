@@ -2,7 +2,12 @@
 
 const debug = require('debug')('koa:error-handler');
 const Response = require('../utils/response');
-const { INVALID_REQUEST, UNKNOWN_ENDPOINT, UNKNOWN_ERROR } = require('../constants/error');
+const {
+  AUTH_REQUIRED,
+  INVALID_REQUEST,
+  UNKNOWN_ENDPOINT,
+  UNKNOWN_ERROR
+} = require('../constants/error');
 
 /**
  * Return middleware that handle exceptions in Koa.
@@ -27,7 +32,12 @@ module.exports = () => {
       console.error(err.stack);
 
       if (err.status < 500) {
-        return Response.fail(ctx, { ...INVALID_REQUEST, message: err.message });
+        switch (err.status) {
+          case 401:
+            return Response.unauthorized(ctx, { ...AUTH_REQUIRED, message: err.message });
+          default:
+            return Response.fail(ctx, { ...INVALID_REQUEST, message: err.message });
+        }
       } else {
         return Response.internalServerError(ctx, UNKNOWN_ERROR);
       }
