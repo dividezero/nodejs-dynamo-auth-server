@@ -1,65 +1,50 @@
-<div align="center">
-  <a href="https://github.com/posquit0/koa-rest-api-boilerplate" title="Koa REST API Boilerplate">
-    <img alt="Koa REST API Boilerplate" src="http://crocodillon.com/images/blog/2015/asynchronous-callbacks-in-koa--twitter.png" width="240px" />
-  </a>
-  <br />
-  <h1>Koa REST API Boilerplate</h1>
-</div>
-
+<!-- PROJECT LOGO -->
+<br />
 <p align="center">
-  Boilerplate for Node.js Koa RESTful API application with Docker, Swagger, Jest, CodeCov, and Circle CI
+  <a href="https://github.com/dividezero/nodejs-dynamo-auth-server">
+    <img src="http://crocodillon.com/images/blog/2015/asynchronous-callbacks-in-koa--twitter.png" alt="Logo" width="240px" >
+  </a>
+
+  <h3 align="center">Oauth2 Authentication Server</h3>
+
+  <p align="center">
+    An awesome Oauth2 authentication server built on NodeJs, DynemoDb and Cognito
+  </p>
 </p>
 
-<div align="center">
-  <a href="https://circleci.com/gh/posquit0/koa-rest-api-boilerplate">
-    <img alt="CircleCI" src="https://circleci.com/gh/posquit0/koa-rest-api-boilerplate.svg?style=shield" />
-  </a>
-  <a href="https://codecov.io/gh/posquit0/koa-rest-api-boilerplate">
-    <img alt="Coverage Status" src="https://codecov.io/gh/posquit0/koa-rest-api-boilerplate/branch/master/graph/badge.svg" />
-  </a>
-  <a href="https://david-dm.org/posquit0/koa-rest-api-boilerplate">
-    <img alt="npm" src="https://img.shields.io/david/posquit0/koa-rest-api-boilerplate.svg?style=flat-square" />
-  </a>
-  <a href="https://opensource.org/licenses/mit-license.php">
-    <img alt="MIT Licence" src="https://badges.frapsoft.com/os/mit/mit.svg?v=103" />
-  </a>
-  <a href="https://github.com/ellerbrock/open-source-badge/">
-    <img alt="Open Source Love" src="https://badges.frapsoft.com/os/v1/open-source.svg?v=103" />
-  </a>
-</div>
+<!-- TABLE OF CONTENTS -->
 
-<br />
+## Table of Contents
 
-**Koa REST API Boilerplate** is a highly opinionated boilerplate template for building RESTful API application with Koa.
+- [Getting Started](#getting-started)
+  - [Prerequisites](#prerequisites)
+  - [Development](#development)
+- [Usage](#usage)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgements](#acknowledgements)
+- [Contact](#contact)
 
-This boilerplate include the following features:
-
-- Logging to STDOUT/STDERR stream using [Pino](http://getpino.io/)
-- A super small and optimized [Docker](https://www.docker.com/) image based on [Node.js Alpine image](https://hub.docker.com/_/node/)
-- [Swagger](https://swagger.io/) API documentation based on JSDoc
-- Continuous integration and delivery using [CircleCI](https://circleci.com/)
-- Unit Test and Integration Test along with Test Coverage using [Jest](https://facebook.github.io/jest/) testing framework
-
----
-
+<!-- GETTING STARTED -->
 
 ## Getting Started
 
-```zsh
-$ git clone https://github.com/posquit0/koa-rest-api-boilerplate your-project-name
-$ cd your-project-name
-$ rm -rf .git && git init
+This is an example of how you may give instructions on setting up your project locally.
+To get a local copy up and running follow these simple example steps.
+
+### Prerequisites
+
+This is an example of how to list things you need to use the software and how to install them.
+
+- npm
+
+```sh
+npm install npm@latest -g
 ```
 
-```zsh
-$ yarn
-$ yarn start
-```
+### Development
 
-
-## Commands
-
-### Run
+#### Run
 
 ```zsh
 # Run normally
@@ -68,7 +53,7 @@ $ yarn start
 $ yarn dev
 ```
 
-### Test
+#### Test
 
 ```zsh
 # Test
@@ -89,45 +74,97 @@ $ yarn lint:app                       # Lint app sourcecode
 $ yarn lint:test                      # Lint test sourcecode
 ```
 
-### Archive
+#### Archive
 
 ```zsh
 $ yarn pack
 ```
 
-
-## Test
+### Test
 
 All test for this boilerplate uses following tools.
 
 - [Jest](https://github.com/facebook/jest)
 - [supertest](https://github.com/visionmedia/supertest) - Easy HTTP assertions for integration test
 
+<!-- USAGE EXAMPLES -->
+
+## Usage
+
+Note that communication in transit to and from this app should be encrypted using TLS
+
+All POST body contents are in `application/json` format
+
+POST `/user`
+
+- `email`: New user email
+- `password`: New user password
+
+POST `/user/verify`
+
+- `email`: User email
+- `token`: Token created on user creation. This should be emailed to the user
+
+POST `/user/login`
+
+- `email`: User email
+- `password`: User password
+
+POST `/user/password/forgot`
+
+- `email`: User email
+
+POST `/user/password/reset`
+
+- `email`: User email
+- `lostToken`: Token created on forgot password. This should be emailed to the user
+- `newPassword`: New password after reset
+
+POST `/user/password/change`
+
+- `email`: User email
+- `password`: Old password
+- `newPassword`: New password
+
+
+<!-- ROADMAP -->
+
+## Roadmap
+
+See the [open issues](https://github.com/dividezero/nodejs-dynamo-auth-server/issues) for a list of proposed features (and known issues).
+
+<!-- CONTRIBUTING -->
 
 ## Contributing
 
-This project follows the [**Contributor Covenant**](http://contributor-covenant.org/version/1/4/) Code of Conduct.
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-#### Bug Reports & Feature Requests
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-Please use the [issue tracker](https://github.com/posquit0/koa-rest-api-boilerplate/issues) to report any bugs or ask feature requests.
-
-
-## Self Promotion
-
-Like this project? Please give it a ★  on [GitHub](https://github.com/posquit0/awesome-engineer-onboarding)! It helps this project **a lot**.
-And if you're feeling especially charitable, follow [posquit0](https://posquit0.com) on [GitHub](https://github.com/posquit0).
-
-
-## See Also
-
-- [koa-logging](https://github.com/kasa-network/koa-logging) - A middleware that logs request and response with Pino.
-- [koa-request-id](https://github.com/kasa-network/koa-request-id) - A middleware that generates a unique Request ID for every incoming HTTP request.
-- [koa-http-client](https://github.com/kasa-network/koa-http-client) - A middleware that attachs HTTP client to communicate with the context during inter-service communications.
-
+<!-- LICENSE -->
 
 ## License
 
-Provided under the terms of the [MIT License](https://github.com/posquit0/koa-rest-api-boilerplate/blob/master/LICENSE).
+Distributed under the MIT License. See `LICENSE` for more information.
 
-Copyright © 2017-2019, [Byungjin Park](http://www.posquit0.com).
+
+<!-- ACKNOWLEDGMENTS -->
+
+## Acknowledgments
+
+Based off [danilop's LambdAuth](https://github.com/danilop/LambdAuth)
+
+Started using [posquit0's Koa Boilerplate](https://github.com/posquit0/koa-rest-api-boilerplate)
+
+<!-- CONTACT -->
+
+## Contact
+
+Your Name - [@hazlanrozaimi](https://twitter.com/hazlanrozaimi) - hazlan.rozaimi@gmail.com
+
+Project Link: [https://github.com/dividezero/nodejs-dynamo-auth-server](https://github.com/dividezero/nodejs-dynamo-auth-server)
+

@@ -16,7 +16,6 @@ const getToken = openIdClient => email => {
         resolve({ identityId: data.IdentityId, token: data.Token });
       }
     });
-    // resolve({ identityId: 'identityId', token: 'token' });
   });
 };
 
