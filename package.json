@@ -1,27 +1,27 @@
 {
-  "name": "koa-rest-api-boilerplate",
-  "version": "2.1.0",
-  "description": "Boilerplate for Koa RESTful API application with Docker, Swagger, Jest, Coveralls, and Circle CI",
-  "homepage": "https://github.com/posquit0/koa-rest-api-boilerplate",
+  "name": "koa-auth-server",
+  "version": "0.0.1",
+  "description": "OAUTH2 Authentication server",
+  "homepage": "https://github.com/dividezero/nodejs-dynamo-auth-server",
   "author": {
-    "name": "Byungjin Park",
-    "email": "posquit0.bj@gmail.com",
-    "url": "https://www.posquit0.com"
+    "name": "Hazlan Rozaimi",
+    "email": "hazlan@gmail.com",
+    "url": "https://www.hazlanrozaimi.com"
   },
   "contributors": [
     {
-      "name": "Byungjin Park",
-      "email": "posquit0.bj@gmail.com",
-      "url": "https://www.posquit0.com"
+      "name": "Hazlan Rozaimi",
+      "email": "hazlan@gmail.com",
+      "url": "https://www.hazlanrozaimi.com"
     }
   ],
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/posquit0/koa-rest-api-boilerplate.git"
+    "url": "https://github.com/dividezero/nodejs-dynamo-auth-server"
   },
   "bugs": {
-    "url": "https://github.com/posquit0/koa-rest-api-boilerplate/issues"
+    "url": "https://github.com/dividezero/nodejs-dynamo-auth-server/issues"
   },
   "keywords": [
     "koa",
@@ -29,9 +29,8 @@
     "rest",
     "restful",
     "api",
-    "koa-boilerplate",
-    "boilerplate",
-    "skeleton"
+    "oauth2",
+    "authentication"
   ],
   "engines": {
     "node": ">= 8.12.0"
@@ -60,6 +59,7 @@
     "aws-sdk": "^2.503.0",
     "crypto-promise": "^2.1.0",
     "dotenv": "^8.0.0",
+    "dynamoose": "^1.10.0",
     "elastic-apm-node": "^2.12.1",
     "got": "^9.6.0",
     "joi": "^14.3.1",
