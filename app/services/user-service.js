@@ -22,7 +22,7 @@ const create = (userRepository, mailSender) => async (email, password) => {
   }
 
   const result = { email };
-  if (env === 'development') {
+  if (['development', 'test'].includes(env)) {
     result.token = token;
   }
   return result;
@@ -125,7 +125,7 @@ const lostPassword = (userRepository, mailSender) => async email => {
     }
 
     const result = { statusCode: 200 };
-    if (env === 'development') {
+    if (['development', 'test'].includes(env)) {
       result.lostToken = lostToken;
     }
     return result;

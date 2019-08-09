@@ -26,7 +26,7 @@ const configs = {
     aws: {
       dynamoDb: {
         region: process.env.DYNAMO_REGION || 'eu-west-1',
-        endpoint: process.env.DYNAMO_ENDPOINT || 'http://localhost:8000',
+        endpoint: process.env.DYNAMO_ENDPOINT,
         accessKey: process.env.DYNAMO_ACCESS_KEY || 'xxxx',
         secretKey: process.env.DYNAMO_SECRET_KEY || 'xxxx'
       },

@@ -3,7 +3,7 @@ const {
   aws: { dynamoDb: ddbConfig }
 } = require('../config');
 
-if (ddbConfig.endpoint.includes('localhost')) {
+if (ddbConfig.endpoint) {
   dynamoose.local(ddbConfig.endpoint);
 }
 
