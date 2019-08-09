@@ -18,7 +18,11 @@ const configs = {
       verificationPageUrl: process.env.VERIFICATION_PAGE_URL,
       resetPageUrl: process.env.RESET_PAGE_URL
     },
-    db: { userTable: process.env.DDB_TABLE || 'users' },
+    db: {
+      userTable: process.env.TABLE_USER || 'users',
+      loginTable: process.env.TABLE_LOGIN || 'logins',
+      clientTable: process.env.TABLE_CLIENT || 'clients'
+    },
     crypto: {
       byteSize: Number(process.env.CRYPTO_BYTE_SIZE) || 128,
       digest: process.env.CRYPTO_DIGEST || 'sha512'
@@ -35,7 +39,7 @@ const configs = {
         accessKey: process.env.COGNITO_ACCESS_KEY || 'xxxx',
         secretKey: process.env.COGNITO_SECRET_KEY || 'xxxx',
         devProviderName: process.env.DEVELOPER_PROVIDER_NAME || 'login.mycompany.myapp',
-        identityPoolId: process.env.IDENTITY_POOL_ID || 'authPool',
+        identityPoolId: process.env.IDENTITY_POOL_ID || 'authPool'
       }
     }
   },
