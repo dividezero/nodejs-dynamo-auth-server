@@ -39,6 +39,7 @@
   "scripts": {
     "start": "node app",
     "dev": "NODE_ENV=development nodemon --inspect=9229 --quiet | pino-pretty -c -l -t",
+    "prod": "NODE_ENV=production node app",
     "test": "NODE_ENV=test jest --passWithNoTests",
     "test:unit": "npm test -- test/unit",
     "test:integration": "npm test -- test/integration",

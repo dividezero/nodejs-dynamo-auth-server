@@ -1,5 +1,6 @@
 const crypto = require('../utils/crypto');
 const { email: emailConfig } = require('../config');
+const env = process.env.NODE_ENV || 'development';
 
 const create = (userRepository, mailSender) => async (email, password) => {
   // get password hash
@@ -8,8 +9,8 @@ const create = (userRepository, mailSender) => async (email, password) => {
   // generate auth token
   let token = await crypto.randomToken();
 
-  // store user
-  await userRepository.store({ email, hash, salt, token });
+  // create user
+  await userRepository.create({ email, hash, salt, verifyToken: token });
 
   if (emailConfig.enabled) {
     try {
@@ -20,8 +21,11 @@ const create = (userRepository, mailSender) => async (email, password) => {
     }
   }
 
-  // todo only return token in dev
-  return { email, token };
+  const result = { email };
+  if (env === 'development') {
+    result.token = token;
+  }
+  return result;
 };
 
 const verify = userRepository => async (email, token) => {
@@ -33,7 +37,8 @@ const verify = userRepository => async (email, token) => {
     return true;
   } else if (verifyToken === token) {
     // new verification
-    await userRepository.update(email, {
+    await userRepository.update({
+      email,
       verified: true,
       verifyToken: null
     });
@@ -84,7 +89,8 @@ const changePassword = userRepository => async (email, password, newPassword) =>
     if (loginHash === hash) {
       // successfully reset
       const { hash: newHash, salt: newSalt } = await crypto.computeHash(newPassword);
-      await userRepository.update(email, {
+      await userRepository.update({
+        email,
         hash: newHash,
         salt: newSalt
       });
@@ -104,7 +110,8 @@ const lostPassword = (userRepository, mailSender) => async email => {
     return { statusCode: 404, message: 'User not found' };
   } else {
     let lostToken = await crypto.randomToken();
-    await userRepository.update(email, {
+    await userRepository.update({
+      email,
       lostToken
     });
 
@@ -116,8 +123,12 @@ const lostPassword = (userRepository, mailSender) => async email => {
         throw new Error(`Failed sending email to ${email}`);
       }
     }
-    // todo only return token in dev
-    return { statusCode: 200, lostToken };
+
+    const result = { statusCode: 200 };
+    if (env === 'development') {
+      result.lostToken = lostToken;
+    }
+    return result;
   }
 };
 
@@ -133,10 +144,7 @@ const resetPassword = userRepository => async (email, token, newPassword) => {
   } else {
     // successfully reset
     const { hash, salt } = await crypto.computeHash(newPassword);
-    await userRepository.update(email, {
-      hash,
-      salt
-    });
+    await userRepository.update({ email, hash, salt });
 
     return { statusCode: 200, changed: true };
   }

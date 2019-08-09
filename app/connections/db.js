@@ -1,14 +1,16 @@
-const AWS = require('aws-sdk');
+const dynamoose = require('dynamoose');
 const {
   aws: { dynamoDb: ddbConfig }
 } = require('../config');
 
-AWS.config.update({
-  region: ddbConfig.region,
+if (ddbConfig.endpoint.includes('localhost')) {
+  dynamoose.local(ddbConfig.endpoint);
+}
+
+dynamoose.AWS.config.update({
   accessKeyId: ddbConfig.accessKey,
-  secretAccessKey: ddbConfig.secretKey
+  secretAccessKey: ddbConfig.secretKey,
+  region: ddbConfig.region
 });
 
-const dynamodb = new AWS.DynamoDB({ endpoint: new AWS.Endpoint(ddbConfig.endpoint) });
-
-module.exports = dynamodb;
+module.exports = dynamoose;
