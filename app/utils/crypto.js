@@ -1,4 +1,5 @@
 const crypto = require('crypto-promise');
+const uuid = require('uuid/v5');
 const { crypto: cryptoConfig } = require('../config');
 
 const computeHash = async (password, salt) => {
@@ -21,8 +22,13 @@ const randomToken = async (len = cryptoConfig.byteSize) => {
   return result.toString('base64');
 };
 
+const generateClientId = dns => uuid(dns, uuid.DNS);
+const generateLoginToken = (clientId, email) => uuid(email, clientId);
+
 module.exports = {
   ...crypto,
   computeHash,
-  randomToken
+  randomToken,
+  generateClientId,
+  generateIdentytyId: generateLoginToken
 };

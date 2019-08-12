@@ -12,6 +12,9 @@ const configs = {
     name: process.env.APP_NAME || 'auth-server',
     host: process.env.APP_HOST || '0.0.0.0',
     port: 7070,
+    defaultTokenExpiry: 60 * 60 * 24,
+    clientIdSalt:
+      'BAgBFUKIt4pXsnkCBvo74y/5VORwlCWByCQc1gF5+06B3xrWjqVA3NHhSmmcL+kfxpXoDLrux3nPWXAhHhbQcB/CwqD592q/VuQgRiypJGvcxDGMUtv6merpK2Ht7f37Bf8PtsYhBUADmuE29jcgO3Q1l9TdbKOmfO0GiycEZ4o=',
     email: {
       enabled: false,
       from: process.env.EMAIL_SOURCE,

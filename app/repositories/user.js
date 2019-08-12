@@ -1,7 +1,12 @@
-const { db: dbConfig } = require('../config');
+const Model = require('./model');
+const config = require('../config');
+const { db: dbConfig } = config;
 
 const SCHEMA = {
-  email: String,
+  email: {
+    type: String,
+    hashKey: true
+  },
   hash: String,
   salt: String,
   token: String,
@@ -10,27 +15,5 @@ const SCHEMA = {
   lostToken: String
 };
 
-const getModel = dbClient => dbClient.model(dbConfig.userTable, SCHEMA);
-
-const fetch = User => email => User.get(email);
-
-const create = User => user => User.create(user);
-
-const update = User => async user => {
-  if (user.save) {
-    return user.save();
-  }
-  const { email } = user;
-  const existingUser = await User.get(email);
-  Object.assign(existingUser, user);
-  return existingUser.save();
-};
-
-module.exports = dbClient => {
-  const User = getModel(dbClient);
-  return {
-    fetch: fetch(User),
-    update: update(User),
-    create: create(User)
-  };
-};
+module.exports = dbClient =>
+  Model(dbConfig.userTable, SCHEMA, dbClient, { expires: config.defaultTokenExpiry });
