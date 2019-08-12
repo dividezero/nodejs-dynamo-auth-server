@@ -12,7 +12,7 @@ const getHashKey = schema => {
   throw new Error('No hashkey found');
 };
 
-const fetch = Model => email => Model.get(email);
+const fetch = Model => id => Model.get(id);
 
 const create = Model => model => Model.create(model);
 
