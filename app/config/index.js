@@ -12,13 +12,20 @@ const configs = {
     name: process.env.APP_NAME || 'auth-server',
     host: process.env.APP_HOST || '0.0.0.0',
     port: 7070,
+    defaultTokenExpiry: 60 * 60 * 24,
+    clientIdSalt:
+      'BAgBFUKIt4pXsnkCBvo74y/5VORwlCWByCQc1gF5+06B3xrWjqVA3NHhSmmcL+kfxpXoDLrux3nPWXAhHhbQcB/CwqD592q/VuQgRiypJGvcxDGMUtv6merpK2Ht7f37Bf8PtsYhBUADmuE29jcgO3Q1l9TdbKOmfO0GiycEZ4o=',
     email: {
       enabled: false,
       from: process.env.EMAIL_SOURCE,
       verificationPageUrl: process.env.VERIFICATION_PAGE_URL,
       resetPageUrl: process.env.RESET_PAGE_URL
     },
-    db: { userTable: process.env.DDB_TABLE || 'users' },
+    db: {
+      userTable: process.env.TABLE_USER || 'users',
+      loginTable: process.env.TABLE_LOGIN || 'logins',
+      clientTable: process.env.TABLE_CLIENT || 'clients'
+    },
     crypto: {
       byteSize: Number(process.env.CRYPTO_BYTE_SIZE) || 128,
       digest: process.env.CRYPTO_DIGEST || 'sha512'
@@ -35,7 +42,7 @@ const configs = {
         accessKey: process.env.COGNITO_ACCESS_KEY || 'xxxx',
         secretKey: process.env.COGNITO_SECRET_KEY || 'xxxx',
         devProviderName: process.env.DEVELOPER_PROVIDER_NAME || 'login.mycompany.myapp',
-        identityPoolId: process.env.IDENTITY_POOL_ID || 'authPool',
+        identityPoolId: process.env.IDENTITY_POOL_ID || 'authPool'
       }
     }
   },

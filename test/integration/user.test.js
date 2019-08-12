@@ -12,16 +12,39 @@ afterAll(async () => {
 const randomNum = () => Math.floor(Math.random() * 1000001);
 
 // todo fix test dependency so tests can be run individually. eg: use beforeAll
-describe('Users', () => {
-  const prefix = '/user';
-  const email = `test${randomNum()}@test.com`;
-  const password = 'password';
-  const password2 = 'password2';
-  const password3 = 'password3';
 
-  const request = supertest(server);
-  let token = '';
-  let lostToken = '';
+const prefix = '/user';
+const email = `test${randomNum()}@test.com`;
+const password = 'password';
+const password2 = 'password2';
+const password3 = 'password3';
+
+const request = supertest(server);
+let token = '';
+let lostToken = '';
+let clientDns = 'app.testclient.com';
+let clientUrl = 'http://localhost:8080';
+let clientId = 'dc9a2311-1776-5f5a-9fda-91359649710b';
+
+describe('Users', () => {
+  beforeAll(async () => {
+    const res = await request
+      .post('/client')
+      .send({
+        dns: clientDns,
+        url: clientUrl
+      })
+      .set({ 'Content-Type': 'application/json' });
+
+    if (res.body && res.status === 'success') {
+      const {
+        body: {
+          data: { id }
+        }
+      } = res;
+      clientId = id;
+    }
+  });
 
   describe('Create User', () => {
     it('<200> should create a user', async () => {
@@ -90,6 +113,7 @@ describe('Users', () => {
         .post(`${prefix}/login`)
         .send({
           email,
+          clientId,
           password: `wrong ${password}`
         })
         .set({ 'Content-Type': 'application/json' })
@@ -104,6 +128,7 @@ describe('Users', () => {
         .post(`${prefix}/login`)
         .send({
           email,
+          clientId,
           password
         })
         .set({ 'Content-Type': 'application/json' })
@@ -155,6 +180,7 @@ describe('Users', () => {
         .post(`${prefix}/login`)
         .send({
           email,
+          clientId,
           password: password2
         })
         .set({ 'Content-Type': 'application/json' })
@@ -190,6 +216,7 @@ describe('Users', () => {
         .post(`${prefix}/login`)
         .send({
           email,
+          clientId,
           password: password3
         })
         .set({ 'Content-Type': 'application/json' })

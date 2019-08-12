@@ -67,6 +67,7 @@ const loginUser = async ctx => {
         email: Joi.string()
           .email()
           .required(),
+        clientId: Joi.string().required(),
         password: Joi.string().required()
       })
     );
@@ -74,8 +75,8 @@ const loginUser = async ctx => {
     ctx.throw(400, err.message);
   }
 
-  const { email, password } = ctx.request.body;
-  const result = await ctx.deps.userService.login(email, password);
+  const { email, clientId, password } = ctx.request.body;
+  const result = await ctx.deps.loginService.create(clientId, email, password);
   const { statusCode, message } = result;
   if (statusCode && statusCode !== 200) {
     ctx.throw(statusCode, message);
