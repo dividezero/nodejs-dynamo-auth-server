@@ -14,13 +14,20 @@ const createClient = async ctx => {
     ctx.throw(400, err.message);
   }
 
-  const { dns, url, tokenExpiry } = ctx.request.body;
-  const data = await ctx.deps.clientService.create(dns, url, tokenExpiry);
+  try {
+    const { dns, url, tokenExpiry } = ctx.request.body;
+    const data = await ctx.deps.clientService.create(dns, url, tokenExpiry);
 
-  ctx.body = {
-    status: 'success',
-    data
-  };
+    ctx.body = {
+      status: 'success',
+      data
+    };
+  } catch (err) {
+    if (err.name === 'ConditionalCheckFailedException') {
+      ctx.throw(400, 'User already exists');
+    }
+    throw err;
+  }
 };
 
 const retrieveUserLogin = async ctx => {

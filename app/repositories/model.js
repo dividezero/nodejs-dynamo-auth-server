@@ -26,11 +26,14 @@ const update = (Model, hashKey) => async model => {
   return existingModel.save();
 };
 
+const remove = Model => id => Model.delete(id);
+
 module.exports = (tableName, schema, dbClient, opts) => {
   const Model = getModel(dbClient, tableName, schema, opts);
   return {
     fetch: fetch(Model),
     update: update(Model, getHashKey(schema)),
-    create: create(Model)
+    create: create(Model),
+    remove: remove(Model)
   };
 };

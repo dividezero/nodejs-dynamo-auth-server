@@ -35,8 +35,6 @@ describe('Users', () => {
         url: clientUrl
       })
       .set({ 'Content-Type': 'application/json' });
-    console.log(res.status);
-    console.log(res.body);
 
     if (res.body && res.status === 'success') {
       const {

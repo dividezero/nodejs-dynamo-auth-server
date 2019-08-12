@@ -16,4 +16,4 @@ const SCHEMA = {
 };
 
 module.exports = dbClient =>
-  Model(dbConfig.userTable, SCHEMA, dbClient, { expires: config.defaultTokenExpiry });
+  Model(dbConfig.userTable, SCHEMA, dbClient);

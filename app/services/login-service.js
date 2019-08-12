@@ -19,10 +19,7 @@ const create = (userRepository, clientRepository, loginRepository) => async (
   const { hash, salt, verified } = user;
   if (!verified) {
     // User not verified
-    return {
-      login: false,
-      verified
-    };
+    return { login: false, statusCode: 401, message: 'User not verified' };
   } else {
     const { hash: loginHash } = await crypto.computeHash(password, salt);
     if (loginHash === hash) {
@@ -79,9 +76,12 @@ const retrieve = (userRepository, clientRepository, loginRepository) => async (
 
   const { client: existingClientId, token: existingToken, expiryDate, user: email } = login;
   const client = await clientRepository.fetch(clientId);
-  const { secret: existingSecret } = client;
   if (!client || existingClientId !== clientId) {
     return { statusCode: 404, message: 'Client not found' };
+  }
+  const { secret: existingSecret } = client;
+  if (!client || existingClientId !== clientId) {
+    return { statusCode: 400, message: 'Mismatched client' };
   }
   if (existingSecret !== clientSecret) {
     return { statusCode: 401, message: 'Client secret is incorrect' };
