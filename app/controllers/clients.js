@@ -23,6 +23,40 @@ const createClient = async ctx => {
   };
 };
 
+const retrieveUserLogin = async ctx => {
+  try {
+    await Joi.validate(
+      ctx.request.body,
+      Joi.object().keys({
+        clientId: Joi.string().required(),
+        clientSecret: Joi.string().required(),
+        identityId: Joi.string().required(),
+        token: Joi.string().required()
+      })
+    );
+  } catch (err) {
+    ctx.throw(400, err.message);
+  }
+
+  const { clientId, clientSecret, identityId, token } = ctx.request.body;
+  const { statusCode, message, data } = await ctx.deps.loginService.retrieve(
+    clientId,
+    clientSecret,
+    identityId,
+    token
+  );
+
+  if (statusCode && statusCode !== 200) {
+    ctx.throw(statusCode, message);
+  }
+
+  ctx.body = {
+    status: 'success',
+    data
+  };
+};
+
 module.exports = {
-  createClient
+  createClient,
+  retrieveUserLogin
 };

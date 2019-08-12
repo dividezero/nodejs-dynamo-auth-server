@@ -65,6 +65,44 @@ const create = (userRepository, clientRepository, loginRepository) => async (
   }
 };
 
+const retrieve = (userRepository, clientRepository, loginRepository) => async (
+  clientId,
+  clientSecret,
+  identityId,
+  token
+) => {
+  const login = await loginRepository.fetch(identityId);
+
+  if (!login) {
+    return { statusCode: 404, message: 'Login not found' };
+  }
+
+  const { client: existingClientId, token: existingToken, expiryDate, user: email } = login;
+  const client = await clientRepository.fetch(clientId);
+  const { secret: existingSecret } = client;
+  if (!client || existingClientId !== clientId) {
+    return { statusCode: 404, message: 'Client not found' };
+  }
+  if (existingSecret !== clientSecret) {
+    return { statusCode: 401, message: 'Client secret is incorrect' };
+  }
+  if (token !== existingToken) {
+    return { statusCode: 401, message: 'Token is incorrect' };
+  }
+  const now = new Date();
+  if (expiryDate <= now) {
+    return { statusCode: 401, message: 'Token has expired' };
+  }
+  const user = await userRepository.fetch(email);
+  if (!user) {
+    return { statusCode: 404, message: 'User not found' };
+  }
+
+  // todo add user profile here later
+  return { statusCode: 200, data: { user: { email }, expiryDate } };
+};
+
 module.exports = ({ userRepository, clientRepository, loginRepository }) => ({
-  create: create(userRepository, clientRepository, loginRepository)
+  create: create(userRepository, clientRepository, loginRepository),
+  retrieve: retrieve(userRepository, clientRepository, loginRepository)
 });
