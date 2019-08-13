@@ -11,7 +11,7 @@ const configs = {
     env,
     name: process.env.APP_NAME || 'auth-server',
     host: process.env.APP_HOST || '0.0.0.0',
-    port: 7070,
+    port: process.env.APP_PORT || 7070,
     defaultTokenExpiry: 60 * 60 * 24,
     email: {
       enabled: false,
