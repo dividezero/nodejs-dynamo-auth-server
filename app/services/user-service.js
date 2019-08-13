@@ -13,12 +13,9 @@ const create = (userRepository, mailSender) => async (email, password) => {
   await userRepository.create({ email, hash, salt, verifyToken: token });
 
   if (emailConfig.enabled) {
-    try {
-      // send notification email
-      await mailSender.sendVerificationEmail(email, token);
-    } catch (err) {
-      throw new Error(`Failed sending email to ${email}`);
-    }
+    // send notification email
+    await mailSender.sendVerificationEmail(email, token);
+    throw new Error(`Failed sending email to ${email}`);
   }
 
   const result = { email };
@@ -87,12 +84,9 @@ const lostPassword = (userRepository, mailSender) => async email => {
     });
 
     if (emailConfig.enabled) {
-      try {
-        // send notification email
-        mailSender.sendLostPasswordEmail(email, lostToken);
-      } catch (err) {
-        throw new Error(`Failed sending email to ${email}`);
-      }
+      // send notification email
+      await mailSender.sendLostPasswordEmail(email, lostToken);
+      throw new Error(`Failed sending email to ${email}`);
     }
 
     const result = { statusCode: 200 };
