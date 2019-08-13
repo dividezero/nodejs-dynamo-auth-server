@@ -23,7 +23,7 @@ function handleError(err, ctx) {
   }
 
   if (ctx == null) {
-    logger.error({ err, event: 'error' }, 'Unhandled exception occured');
+    logger.error({ err, event: 'error' }, 'Unhandled exception occurred');
   }
 }
 

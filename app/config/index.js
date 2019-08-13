@@ -14,7 +14,14 @@ const configs = {
     port: process.env.APP_PORT || 7070,
     defaultTokenExpiry: 60 * 60 * 24,
     email: {
-      enabled: false,
+      smtp: {
+        host: process.env.SMTP_HOST || '',
+        port: process.env.SMTP_PORT || 587,
+        secure: process.env.SMTP_SECURE === 'true',
+        username: process.env.SMTP_USERNAME || '',
+        password: process.env.SMTP_PASSWORD || ''
+      },
+      enabled: process.env.EMAIL_ENABLED ? process.env.EMAIL_ENABLED === 'true' : true,
       from: process.env.EMAIL_SOURCE,
       verificationPageUrl: process.env.VERIFICATION_PAGE_URL,
       resetPageUrl: process.env.RESET_PAGE_URL

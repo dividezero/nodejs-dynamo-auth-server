@@ -15,7 +15,7 @@ const create = (userRepository, mailSender) => async (email, password) => {
   if (emailConfig.enabled) {
     try {
       // send notification email
-      mailSender.sendVerificationEmail(email, token);
+      await mailSender.sendVerificationEmail(email, token);
     } catch (err) {
       throw new Error(`Failed sending email to ${email}`);
     }
