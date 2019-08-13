@@ -15,7 +15,6 @@ const create = (userRepository, mailSender) => async (email, password) => {
   if (emailConfig.enabled) {
     // send notification email
     await mailSender.sendVerificationEmail(email, token);
-    throw new Error(`Failed sending email to ${email}`);
   }
 
   const result = { email };
@@ -86,7 +85,6 @@ const lostPassword = (userRepository, mailSender) => async email => {
     if (emailConfig.enabled) {
       // send notification email
       await mailSender.sendLostPasswordEmail(email, lostToken);
-      throw new Error(`Failed sending email to ${email}`);
     }
 
     const result = { statusCode: 200 };
