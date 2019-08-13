@@ -193,3 +193,8 @@ tags
 .vscode/
 tsconfig.json
 jsconfig.json
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

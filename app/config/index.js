@@ -13,8 +13,6 @@ const configs = {
     host: process.env.APP_HOST || '0.0.0.0',
     port: 7070,
     defaultTokenExpiry: 60 * 60 * 24,
-    clientIdSalt:
-      'BAgBFUKIt4pXsnkCBvo74y/5VORwlCWByCQc1gF5+06B3xrWjqVA3NHhSmmcL+kfxpXoDLrux3nPWXAhHhbQcB/CwqD592q/VuQgRiypJGvcxDGMUtv6merpK2Ht7f37Bf8PtsYhBUADmuE29jcgO3Q1l9TdbKOmfO0GiycEZ4o=',
     email: {
       enabled: false,
       from: process.env.EMAIL_SOURCE,
@@ -36,13 +34,6 @@ const configs = {
         endpoint: process.env.DYNAMO_ENDPOINT,
         accessKey: process.env.DYNAMO_ACCESS_KEY || 'xxxx',
         secretKey: process.env.DYNAMO_SECRET_KEY || 'xxxx'
-      },
-      cognito: {
-        region: process.env.COGNITO_REGION || 'eu-west-1',
-        accessKey: process.env.COGNITO_ACCESS_KEY || 'xxxx',
-        secretKey: process.env.COGNITO_SECRET_KEY || 'xxxx',
-        devProviderName: process.env.DEVELOPER_PROVIDER_NAME || 'login.mycompany.myapp',
-        identityPoolId: process.env.IDENTITY_POOL_ID || 'authPool'
       }
     }
   },

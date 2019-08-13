@@ -49,35 +49,6 @@ const verify = userRepository => async (email, token) => {
   }
 };
 
-const login = (userRepository, openId) => async (email, password) => {
-  const user = await userRepository.fetch(email);
-  const { hash, salt, verified } = user;
-  if (!hash) {
-    // user doesnt exist
-    return { login: false, statusCode: 404, message: 'User not found' };
-  } else if (!verified) {
-    // User not verified
-    return {
-      login: false,
-      verified
-    };
-  } else {
-    const { hash: loginHash } = await crypto.computeHash(password, salt);
-    if (loginHash === hash) {
-      const { identityId, token } = await openId.getToken(email);
-      return {
-        login: true,
-        data: {
-          identityId: identityId,
-          token: token
-        }
-      };
-    } else {
-      return { login: false, statusCode: 401, message: 'Wrong password' };
-    }
-  }
-};
-
 const changePassword = userRepository => async (email, password, newPassword) => {
   const user = await userRepository.fetch(email);
   const { hash, salt } = user;
@@ -150,10 +121,9 @@ const resetPassword = userRepository => async (email, token, newPassword) => {
   }
 };
 
-module.exports = ({ userRepository, mailSender, openId }) => ({
+module.exports = ({ userRepository, mailSender }) => ({
   create: create(userRepository, mailSender),
   verify: verify(userRepository),
-  login: login(userRepository, openId),
   changePassword: changePassword(userRepository),
   lostPassword: lostPassword(userRepository, mailSender),
   resetPassword: resetPassword(userRepository)

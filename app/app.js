@@ -14,7 +14,6 @@ const router = require('./routes');
 const repositoriesHandler = require('./repositories');
 const servicesHandler = require('./services');
 const mailSenderHandler = require('./helpers/mail-sender');
-const openIdHandler = require('./helpers/open-id');
 
 class App extends Koa {
   constructor(dependencies) {
@@ -34,11 +33,10 @@ class App extends Koa {
   }
 
   _configureDependencies(dependencies) {
-    const { dbClient, emailClient, openIdClient } = dependencies;
+    const { dbClient, emailClient } = dependencies;
     const repositories = repositoriesHandler(dbClient);
     const mailSender = mailSenderHandler(emailClient);
-    const openId = openIdHandler(openIdClient);
-    const deps = { ...repositories, mailSender, openId };
+    const deps = { ...repositories, mailSender };
     const services = servicesHandler(deps);
 
     this.use(koadepsi({ ...deps, ...services }));

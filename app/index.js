@@ -9,12 +9,10 @@ const App = require('./app');
 const logger = require('./logger');
 const dbClient = require('./connections/db');
 const emailClient = require('./connections/email');
-const openIdClient = require('./connections/open-id');
 
 const dependencies = {
   dbClient,
-  emailClient,
-  openIdClient
+  emailClient
 };
 
 const app = new App(dependencies);
