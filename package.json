@@ -57,7 +57,7 @@
     "@kasa/koa-logging": "^0.3.0",
     "@kasa/koa-request-id": "^2.0.1",
     "@koa/cors": "^3.0.0",
-    "aws-sdk": "^2.503.0",
+    "aws-sdk": "^2.814.0",
     "crypto-promise": "^2.1.0",
     "dotenv": "^8.0.0",
     "dynamoose": "^1.10.0",
