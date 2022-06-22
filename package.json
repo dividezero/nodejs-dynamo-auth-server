@@ -62,7 +62,7 @@
     "dotenv": "^8.0.0",
     "dynamoose": "^1.10.0",
     "elastic-apm-node": "^2.12.1",
-    "got": "^9.6.0",
+    "got": "^11.8.5",
     "joi": "^14.3.1",
     "koa": "^2.7.0",
     "koa-bodyparser": "^4.2.1",
